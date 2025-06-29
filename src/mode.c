@@ -6,9 +6,9 @@
 
 #include "application.h"
 #include "info.h"
+#include "select.h"
 #include "shellcmd.h"
 #include "ui.h"
-#include "select.h"
 
 #include <stdlib.h>
 #include <string.h>
@@ -18,7 +18,8 @@
  * @param expr command expression
  * @param path file path to substitute into expression
  */
-static void execute_cmd(const char* expr, const char* path, const char *selection)
+static void execute_cmd(const char* expr, const char* path,
+                        const char* selection)
 {
     const size_t max_status = 60;
     struct array* out = NULL;
@@ -101,7 +102,8 @@ void mode_handle(struct mode* mode, const struct action* action)
             app_switch_mode(action->params);
             break;
         case action_exec:
-            execute_cmd(action->params, mode->get_current()->source, get_formatted_selection());
+            execute_cmd(action->params, mode->get_current()->source,
+                        get_formatted_selection());
             break;
         case action_help:
             if (help_visible()) {

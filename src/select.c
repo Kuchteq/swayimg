@@ -23,9 +23,12 @@ void selection_init(void)
     formatted_selection[0] = 0;
 }
 
-char* get_formatted_selection(void) {
-        snprintf(formatted_selection, sizeof(formatted_selection), "%zd x %zd - %zd x %zd", ctx.sx, ctx.sy, ctx.ex, ctx.ey);
-        return formatted_selection;
+char* get_formatted_selection(void)
+{
+    snprintf(formatted_selection, sizeof(formatted_selection),
+             "%zdx%zd+%zd+%zd", ctx.ex - ctx.sx, ctx.ey - ctx.sy, ctx.sx,
+             ctx.sy);
+    return formatted_selection;
 }
 
 void selection_draw(const struct viewport* vp, struct pixmap* wnd)
@@ -48,7 +51,7 @@ void selection_draw(const struct viewport* vp, struct pixmap* wnd)
     pixmap_blend(wnd, vp->x, vp->y, sx, height, backdrop);
     pixmap_blend(wnd, vp->x + ex, vp->y, width - ex, height, backdrop);
     pixmap_blend(wnd, vp->x + sx, vp->y, ex - sx, sy, backdrop);
-    pixmap_blend(wnd, vp->x + sx, vp->y+ey, ex - sx, height - ey, backdrop);
+    pixmap_blend(wnd, vp->x + sx, vp->y + ey, ex - sx, height - ey, backdrop);
 }
 
 void selection_resize(const struct viewport* vp, ssize_t x, ssize_t y)

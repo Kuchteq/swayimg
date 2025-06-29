@@ -211,7 +211,7 @@ int shellcmd_exec(const char* cmd, struct array** out, struct array** err)
     return rc;
 }
 
-char* shellcmd_expr(const char* expr, const char* path, const char *selection)
+char* shellcmd_expr(const char* expr, const char* path, const char* selection)
 {
     char* cmd;
 
