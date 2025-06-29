@@ -8,6 +8,7 @@
 #include "info.h"
 #include "shellcmd.h"
 #include "ui.h"
+#include "select.h"
 
 #include <stdlib.h>
 #include <string.h>
@@ -17,7 +18,7 @@
  * @param expr command expression
  * @param path file path to substitute into expression
  */
-static void execute_cmd(const char* expr, const char* path)
+static void execute_cmd(const char* expr, const char* path, const char *selection)
 {
     const size_t max_status = 60;
     struct array* out = NULL;
@@ -27,7 +28,7 @@ static void execute_cmd(const char* expr, const char* path)
     int rc;
 
     // contruct and execute command
-    cmd = shellcmd_expr(expr, path);
+    cmd = shellcmd_expr(expr, path, selection);
     if (!cmd) {
         info_update(info_status, "Error: no command to execute");
         app_redraw();
@@ -100,7 +101,7 @@ void mode_handle(struct mode* mode, const struct action* action)
             app_switch_mode(action->params);
             break;
         case action_exec:
-            execute_cmd(action->params, mode->get_current()->source);
+            execute_cmd(action->params, mode->get_current()->source, get_formatted_selection());
             break;
         case action_help:
             if (help_visible()) {

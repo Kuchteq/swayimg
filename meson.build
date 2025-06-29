@@ -252,6 +252,7 @@ sources = [
     'src/pixmap.c',
     'src/render.c',
     'src/shellcmd.c',
+    'src/select.c',
     'src/slideshow.c',
     'src/tpool.c',
     'src/ui.c',

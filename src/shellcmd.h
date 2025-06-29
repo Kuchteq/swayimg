@@ -24,4 +24,4 @@ int shellcmd_exec(const char* cmd, struct array** out, struct array** err);
  * @param path file path to substitute into expression
  * @return result command, caller should free the buffer
  */
-char* shellcmd_expr(const char* expr, const char* path);
+char* shellcmd_expr(const char* expr, const char* path, const char *selection);

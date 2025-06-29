@@ -26,7 +26,6 @@ struct viewer {
     pthread_t preload_tid; ///< Preload thread id
     bool preload_active;   ///< Preload in progress flag
     bool loop_list;        ///< Loop image list
-    struct selection selection;
 };
 
 /** Global viewer context. */
@@ -320,7 +319,7 @@ static void redraw(void)
     struct pixmap* wnd = ui_draw_begin();
     if (wnd) {
         viewport_draw(&ctx.vp, wnd);
-        selection_draw(&ctx.vp, wnd, &ctx.selection);
+        selection_draw(&ctx.vp, wnd);
         info_print(wnd);
         ui_draw_commit();
     }
@@ -494,7 +493,7 @@ static void on_mouse_move(uint8_t mods, uint32_t btn,
         }
         app_redraw();
     } else if (kb && kb->actions->type == action_select) {
-        selection_resize(&ctx.vp, &ctx.selection, x, y);
+        selection_resize(&ctx.vp, x, y);
         app_redraw();
     }
 }
@@ -509,7 +508,7 @@ static bool on_mouse_click(uint8_t mods, uint32_t btn,
         ui_set_cursor(ui_cursor_drag);
         return true;
     } else if (kb && kb->actions->type == action_select) {
-        selection_start(&ctx.vp, &ctx.selection, x, y);
+        selection_start(&ctx.vp, x, y);
         return true;
     }
     return false;
@@ -650,7 +649,7 @@ void viewer_init(const struct config* cfg, struct mode* handlers)
 
     // init viewport
     viewport_init(&ctx.vp, section);
-    selection_init(&ctx.selection);
+    selection_init();
     ctx.vp.animation_cb = on_animation;
 
     // image list loop mode

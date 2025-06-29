@@ -211,12 +211,12 @@ int shellcmd_exec(const char* cmd, struct array** out, struct array** err)
     return rc;
 }
 
-char* shellcmd_expr(const char* expr, const char* path)
+char* shellcmd_expr(const char* expr, const char* path, const char *selection)
 {
     char* cmd;
 
     // reserve buffer for command
-    cmd = malloc(strlen(expr) + strlen(path) + 1);
+    cmd = malloc(strlen(expr) + strlen(path) + strlen(selection) + 1);
     if (!cmd) {
         return NULL;
     }
@@ -228,6 +228,13 @@ char* shellcmd_expr(const char* expr, const char* path)
             ++expr;
             if (*expr != '%') {
                 str_append(path, 0, &cmd); // replace % with path
+                continue;
+            }
+        }
+        if (*expr == '&') {
+            ++expr;
+            if (*expr != '&') {
+                str_append(selection, 0, &cmd); // replace % selection range
                 continue;
             }
         }
