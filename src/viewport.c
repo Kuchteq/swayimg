@@ -5,6 +5,7 @@
 #include "viewport.h"
 
 #include "application.h"
+#include "src/pixmap.h"
 
 #include <assert.h>
 #include <math.h>
