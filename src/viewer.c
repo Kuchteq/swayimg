@@ -9,10 +9,12 @@
 #include "imglist.h"
 #include "info.h"
 #include "render.h"
+#include "select.h"
 #include "ui.h"
 #include "viewport.h"
 
 #include <pthread.h>
+#include <stdio.h>
 
 /** Viewer context. */
 struct viewer {
@@ -24,6 +26,7 @@ struct viewer {
     pthread_t preload_tid; ///< Preload thread id
     bool preload_active;   ///< Preload in progress flag
     bool loop_list;        ///< Loop image list
+    struct selection selection;
 };
 
 /** Global viewer context. */
@@ -317,6 +320,7 @@ static void redraw(void)
     struct pixmap* wnd = ui_draw_begin();
     if (wnd) {
         viewport_draw(&ctx.vp, wnd);
+        selection_draw(&ctx.vp, wnd, &ctx.selection);
         info_print(wnd);
         ui_draw_commit();
     }
@@ -489,6 +493,9 @@ static void on_mouse_move(uint8_t mods, uint32_t btn,
             viewport_move(&ctx.vp, vp_move_up, -dy);
         }
         app_redraw();
+    } else if (kb && kb->actions->type == action_select) {
+        selection_resize(&ctx.vp, &ctx.selection, x, y);
+        app_redraw();
     }
 }
 
@@ -500,6 +507,9 @@ static bool on_mouse_click(uint8_t mods, uint32_t btn,
     const struct keybind* kb = keybind_find(ctx.kb, MOUSE_TO_XKB(btn), mods);
     if (kb && kb->actions->type == action_drag) {
         ui_set_cursor(ui_cursor_drag);
+        return true;
+    } else if (kb && kb->actions->type == action_select) {
+        selection_start(&ctx.vp, &ctx.selection, x, y);
         return true;
     }
     return false;
@@ -640,6 +650,7 @@ void viewer_init(const struct config* cfg, struct mode* handlers)
 
     // init viewport
     viewport_init(&ctx.vp, section);
+    selection_init(&ctx.selection);
     ctx.vp.animation_cb = on_animation;
 
     // image list loop mode

@@ -45,6 +45,7 @@ static const char* action_names[] = {
     [action_reload] = "reload",
     [action_redraw] = "redraw",
     [action_drag] = "drag",
+    [action_select] = "select",
     [action_antialiasing] = "antialiasing",
     [action_info] = "info",
     [action_exec] = "exec",

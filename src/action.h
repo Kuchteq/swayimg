@@ -46,6 +46,7 @@ enum action_type {
     action_pause,
     action_status,
     action_exit,
+    action_select,
 };
 
 /** Single action. */
